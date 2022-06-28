@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import sys
+import os
 import unittest
 from unittest.mock import patch
 
@@ -53,6 +54,23 @@ class ImageFormats(unittest.TestCase):
         self.assertTrue(result)
         self.assertEqual(container_spec["image"], expected_image)
 
+    @patch("imageswap.imageswap_with_path", "false")
+    def test_image_format_image_only_no_path(self):
+
+        """Method to test MAP based swap (image only: \"alpine\")"""
+
+        container_spec = {}
+        container_spec["name"] = "test-container"
+        container_spec["image"] = "alpine"
+
+        expected_image = "my.example.com/mirror-docker.io/alpine"
+        result = imageswap.swap_image(container_spec)
+
+        self.assertTrue(result)
+        self.assertEqual(container_spec["image"], expected_image)
+
+        os.environ["IMAGESWAP_INCLUDE_PATH"] = "true"
+
     def test_image_format_image_tag(self):
 
         """Method to test MAP based swap (image+tag: \"nginx:latest\")"""
@@ -81,6 +99,21 @@ class ImageFormats(unittest.TestCase):
         self.assertTrue(result)
         self.assertEqual(container_spec["image"], expected_image)
 
+    @patch("imageswap.imageswap_with_path", "false")
+    def test_image_format_project_image_no_path(self):
+
+        """Method to test MAP based swap (project+image: \"ubuntu/ubuntu\")"""
+
+        container_spec = {}
+        container_spec["name"] = "test-container"
+        container_spec["image"] = "my_corpo/ubuntu"
+
+        expected_image = "my.example.com/mirror-docker.io/ubuntu"
+        result = imageswap.swap_image(container_spec)
+
+        self.assertTrue(result)
+        self.assertEqual(container_spec["image"], expected_image)
+
     def test_image_format_project_image_tag(self):
 
         """Method to test MAP based swap (project+image+tag: \"ubuntu/ubuntu:latest\")"""
@@ -95,8 +128,22 @@ class ImageFormats(unittest.TestCase):
         self.assertTrue(result)
         self.assertEqual(container_spec["image"], expected_image)
 
-    # Test registry+project+image
+    @patch("imageswap.imageswap_with_path", "false")
+    def test_image_format_project_image_tag_no_path(self):
 
+        """Method to test MAP based swap (project+image+tag: \"ubuntu/ubuntu:latest\")"""
+
+        container_spec = {}
+        container_spec["name"] = "test-container"
+        container_spec["image"] = "ubuntu/ubuntu:latest"
+
+        expected_image = "my.example.com/mirror-docker.io/ubuntu:latest"
+        result = imageswap.swap_image(container_spec)
+
+        self.assertTrue(result)
+        self.assertEqual(container_spec["image"], expected_image)
+
+    # Test registry+project+image
     def test_image_format_registry_project_image(self):
 
         """Method to test MAP based swap (registry+project+image: \"quay.io/solo/gloo\")"""
@@ -106,6 +153,21 @@ class ImageFormats(unittest.TestCase):
         container_spec["image"] = "quay.io/solo/gloo"
 
         expected_image = "quay.example3.com/solo/gloo"
+        result = imageswap.swap_image(container_spec)
+
+        self.assertTrue(result)
+        self.assertEqual(container_spec["image"], expected_image)
+
+    @patch("imageswap.imageswap_with_path", "false")
+    def test_image_format_registry_project_image_no_path(self):
+
+        """Method to test MAP based swap (registry+project+image: \"quay.io/solo/gloo\")"""
+
+        container_spec = {}
+        container_spec["name"] = "test-container"
+        container_spec["image"] = "quay.io/solo/gloo"
+
+        expected_image = "quay.example3.com/gloo"
         result = imageswap.swap_image(container_spec)
 
         self.assertTrue(result)
@@ -125,7 +187,22 @@ class ImageFormats(unittest.TestCase):
         self.assertTrue(result)
         self.assertEqual(container_spec["image"], expected_image)
 
-    def test_image_format_registry_port_project_image_tag(self):
+    def test_image_format_registry_project_image_tag(self):
+
+        """Method to test MAP based swap (registry+project+image+tag: \"quay.io/solo/gloo:v1.0\")"""
+
+        container_spec = {}
+        container_spec["name"] = "test-container"
+        container_spec["image"] = "quay.io/solo/gloo:v1.0"
+
+        expected_image = "quay.example3.com/solo/gloo:v1.0"
+        result = imageswap.swap_image(container_spec)
+
+        self.assertTrue(result)
+        self.assertEqual(container_spec["image"], expected_image)
+
+    @patch("imageswap.imageswap_with_path", "false")
+    def test_image_format_registry_port_project_image_tag_no_path(self):
 
         """Method to test MAP based swap (registry+port+project+image+tag: \"gcr.io:443/istio/istiod:latest\")"""
 
@@ -133,7 +210,7 @@ class ImageFormats(unittest.TestCase):
         container_spec["name"] = "test-container"
         container_spec["image"] = "gcr.io:443/istio/istiod:latest"
 
-        expected_image = "default.example.com/istio/istiod:latest"
+        expected_image = "default.example.com/istiod:latest"
         result = imageswap.swap_image(container_spec)
 
         self.assertTrue(result)
@@ -167,6 +244,21 @@ class ImageFormats(unittest.TestCase):
         self.assertTrue(result)
         self.assertEqual(container_spec["image"], expected_image)
 
+    @patch("imageswap.imageswap_with_path", "false")
+    def test_image_format_nested_project_image_tag_no_path(self):
+
+        """Method to test MAP based swap (nested project+image+tag: \"some/random/test/without/registry-or-tag:latest\")"""
+
+        container_spec = {}
+        container_spec["name"] = "test-container"
+        container_spec["image"] = "some/random/test/without/registry-or-tag:latest"
+
+        expected_image = "my.example.com/mirror-docker.io/registry-or-tag:latest"
+        result = imageswap.swap_image(container_spec)
+
+        self.assertTrue(result)
+        self.assertEqual(container_spec["image"], expected_image)
+
     def test_image_format_registry_nested_project_image_tag(self):
 
         """Method to test MAP based swap (registry+nested project+image+tag: \"myregistry.com/some/random/test/with/registry:latest\")"""
@@ -176,6 +268,21 @@ class ImageFormats(unittest.TestCase):
         container_spec["image"] = "myregistry.com/some/random/test/with/registry:latest"
 
         expected_image = "default.example.com/some/random/test/with/registry:latest"
+        result = imageswap.swap_image(container_spec)
+
+        self.assertTrue(result)
+        self.assertEqual(container_spec["image"], expected_image)
+
+    @patch("imageswap.imageswap_with_path", "false")
+    def test_image_format_registry_nested_project_image_tag_no_path(self):
+
+        """Method to test MAP based swap (registry+nested project+image+tag: \"myregistry.com/some/random/test/with/registry:latest\")"""
+
+        container_spec = {}
+        container_spec["name"] = "test-container"
+        container_spec["image"] = "myregistry.com/some/random/test/with/registry:latest"
+
+        expected_image = "default.example.com/registry:latest"
         result = imageswap.swap_image(container_spec)
 
         self.assertTrue(result)
@@ -204,6 +311,21 @@ class ImageFormats(unittest.TestCase):
         container_spec["image"] = "kindest/node@sha256:15d3b5c4f521a84896ed1ead1b14e4774d02202d5c65ab68f30eeaf310a3b1a7"
 
         expected_image = "my.example.com/mirror-docker.io/kindest/node@sha256:15d3b5c4f521a84896ed1ead1b14e4774d02202d5c65ab68f30eeaf310a3b1a7"
+        result = imageswap.swap_image(container_spec)
+
+        self.assertTrue(result)
+        self.assertEqual(container_spec["image"], expected_image)
+
+    @patch("imageswap.imageswap_with_path", "false")
+    def test_image_format_project_image_digest_no_path(self):
+
+        """Method to test MAP based swap (project+image@digest: \"kindest/node@sha256:15d3b5c4f521a84896ed1ead1b14e4774d02202d5c65ab68f30eeaf310a3b1a7\")"""
+
+        container_spec = {}
+        container_spec["name"] = "test-container"
+        container_spec["image"] = "kindest/node@sha256:15d3b5c4f521a84896ed1ead1b14e4774d02202d5c65ab68f30eeaf310a3b1a7"
+
+        expected_image = "my.example.com/mirror-docker.io/node@sha256:15d3b5c4f521a84896ed1ead1b14e4774d02202d5c65ab68f30eeaf310a3b1a7"
         result = imageswap.swap_image(container_spec)
 
         self.assertTrue(result)
