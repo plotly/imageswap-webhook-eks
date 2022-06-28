@@ -191,7 +191,7 @@ data:
               - "*"
             resources:
               - "pods"
-        failurePolicy: Fail
+        failurePolicy: Ignore
         reinvocationPolicy: IfNeeded
         namespaceSelector:
           matchLabels:
@@ -206,7 +206,7 @@ metadata:
 apiVersion: v1
 data:
   maps: |
-    default:registry.example.com
+    default::registry.example.com
 kind: ConfigMap
 metadata:
   creationTimestamp: null
@@ -296,7 +296,7 @@ spec:
               mountPath: /mwc
       containers:
       - name: imageswap
-        image: thewebroot/imageswap:v1.4.2
+        image: quay.io/plotly/imageswap:v1.4.3
         ports:
         - containerPort: 5000
         command: ["gunicorn", "imageswap:app", "--config=config.py"]
