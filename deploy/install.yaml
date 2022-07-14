@@ -296,7 +296,7 @@ spec:
               mountPath: /mwc
       containers:
       - name: imageswap
-        image: quay.io/plotly/imageswap:v1.4.3
+        image: quay.io/plotly/imageswap:v1.4.4
         ports:
         - containerPort: 5000
         command: ["gunicorn", "imageswap:app", "--config=config.py"]
