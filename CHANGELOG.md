@@ -112,17 +112,47 @@ More info can be found in this issue: #46
 
 - Thanks to @adavenpo for bringing this to our attention
 
-## 1.4.3
+## 1.5.0
 
-This release moves to using a new syntax (`::`) to separate the key and value portions of a map definition in the maps file. Backwards compatibility is maintained for the existing `:` syntax, but this has been deprecated and should not be used. Please update any existing map configurations to use the new syntax.
+This release is primarily focused on adding support for newer Kubernetes versions (v1.19+), but does introduce breaking changes for prior Kubernetes versions.
+
+**ImageSwap v1.4.2 should be used for Kubernetes versions below v1.19.0**
+
+ImageSwap v1.5.0 is using a newer release of the Kubernetes Python Client library which removed some previously deprecated API's and changed the way the CertificateSigningRequest resource is handled for the webhook Cert Bundle.
+
+This release also moves to using a new syntax (`::`) to separate the key and value portions of a map definition in the maps file. Backwards compatibility is maintained for the existing `:` syntax, but this has been deprecated and should not be used. Please update any existing map configurations to use the new syntax.
 
 This release also adds additional validation to catch errors associated with specifying a registry in a map definition key that includes the `:<port_number>` syntax. Previously this would result in an error and a stack trace. This is now handled gracefully and the new map separator syntax should allow for registries to include ports going forward.
 
 ### Enhancements
 
 - Add support for new map definition deparator syntax (#50)
+- Bump Kubernetes Python Client to v23.3.0 to support new K8s versions (#68 / #65)
+- Bump KinD node images/matrix to test aginst k8s v1.19, v1.20, v1.21, and v1.22 for CI (#68 / #65)
+- Bump KinD Github Action to v0.12.0 for CI (#68 / #65)
+- Move to admission.k8s.io/v1 for AdmissionReview (#68 / #65)
+- Move to admissionregistration.k8s.io/v1 for VWC (#68 / #65)
+- Add sign verb for cluster scoped RBAC (#68 / #65)
+- Move to support v4.x of yq utility syntax for Makefile/CI (#68 / #65)
+- Temporarily remove the `linux/ppc64le` platform from image builds. Ongoing issue that needs triage
 
 ### Acknowledgements
 
-- Thanks to @sblair-metrostar for bringing this to our attention
+- Thanks to @sblair-metrostar for bringing the port number issue to our attention
+- Thanks to @mariomcosta, @awoimbee, and @ilrudie for helping get k8s v1.22+ supported
 
+## 1.5.1
+
+This is primarily a maintenance release with a couple of small enhancements.
+
+### Enhancements
+
+- Cleanup some legacy logic for detecting the K8s API Server CA Cert. This also enables support in K3S environments (#70)
+- Adds the `IMAGESWAP_DISABLE_AUTO_MWC` environment variable to allow for disabling the automatic generation of the Mutating Webhook Configuration (MWC) in the imageswap-init container (#71)
+- Adds the `IMAGESWAP_CSR_SIGNER_NAME` environmental variable to allow for customizing the signer used in the K8s CertificateSigningRequest resource. Defaults to `kubernetes.io/kubelet-serving` to maintain backwards compatibility (#76)
+
+### Acknowledgements
+
+- Thanks to @jchanam for their work on #76
+- Thanks to @howardburgess for suggesting #67
+- Thanks to @rainsun for bringing #56 to our attention and supplying logs to help triage the issue
