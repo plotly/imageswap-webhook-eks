@@ -161,7 +161,8 @@ data:
   PYTHONUNBUFFERED: "TRUE"
   IMAGESWAP_INCLUDE_PATH: "false"
   IMAGESWAP_MODE: "MAPS"
-  IMAGESWAP_LOG_LEVEL: "INFO"
+  IMAGESWAP_LOG_LEVEL: "DEBUG"
+  IMAGESWAP_CSR_SIGNER_NAME: "beta.eks.amazonaws.com/app-serving"
 
 ---
 apiVersion: v1
