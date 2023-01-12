@@ -209,17 +209,6 @@ metadata:
 
 ---
 apiVersion: v1
-data:
-  maps: |
-    default::registry.example.com
-kind: ConfigMap
-metadata:
-  creationTimestamp: null
-  name: imageswap-maps
-  namespace: imageswap-system
-
----
-apiVersion: v1
 kind: Service
 metadata:
   name: imageswap
