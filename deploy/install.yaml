@@ -275,6 +275,8 @@ spec:
       securityContext:
         runAsUser: 1898
         runAsGroup: 1898
+        seccompProfile:
+          type: RuntimeDefault
       initContainers:
         - name: imageswap-init
           image: thewebroot/imageswap-init:v1.5.1
@@ -282,6 +284,9 @@ spec:
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           env:
           - name: IMAGESWAP_POD_NAME
             valueFrom:
@@ -308,6 +313,9 @@ spec:
         imagePullPolicy: Always
         securityContext:
             allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
         resources:
           limits:
             cpu: "500m"
