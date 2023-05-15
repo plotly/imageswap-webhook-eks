@@ -275,6 +275,7 @@ spec:
       securityContext:
         runAsUser: 1898
         runAsGroup: 1898
+        runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
       initContainers:
