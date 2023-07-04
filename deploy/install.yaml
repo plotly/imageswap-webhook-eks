@@ -236,21 +236,22 @@ spec:
   sessionAffinity: None
   type: ClusterIP
 
----
-apiVersion: policy/v1beta1
-kind: PodDisruptionBudget
-metadata:
-  name: imageswap-pdb
-  namespace: imageswap-system
-  labels:
-    app: imageswap
-    resource: poddisruptionbudget
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: imageswap
-
+#---
+# Not available in 1.25 k8s
+#apiVersion: policy/v1beta1
+#kind: PodDisruptionBudget
+#metadata:
+#  name: imageswap-pdb
+#  namespace: imageswap-system
+#  labels:
+#    app: imageswap
+#    resource: poddisruptionbudget
+#spec:
+#  minAvailable: 1
+#  selector:
+#    matchLabels:
+#      app: imageswap
+#
 ---
 
 apiVersion: apps/v1
